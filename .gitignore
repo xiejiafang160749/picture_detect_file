@@ -1,0 +1,4 @@
+2026ai-result/
+__pycache__/
+*.pyc
+.env

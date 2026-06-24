@@ -140,6 +140,7 @@ async def process_folder(input_folder: Path, output_folder: Path):
 
 
 def main():
+    global LOCAL_BASE_URL, VISION_MODEL
     parser = argparse.ArgumentParser(description="本地模型 AI 图片检测批处理工具")
     parser.add_argument("input_folder", nargs="?", default="example-s6", help="输入图片文件夹（默认: example-s6）")
     parser.add_argument("output_folder", nargs="?", default="2026ai-result", help="输出结果文件夹（默认: 2026ai-result）")
@@ -147,7 +148,6 @@ def main():
     parser.add_argument("--model", default=VISION_MODEL, help=f"模型名称（默认: {VISION_MODEL}）")
     args = parser.parse_args()
 
-    global LOCAL_BASE_URL, VISION_MODEL
     LOCAL_BASE_URL = args.base_url
     VISION_MODEL = args.model
 

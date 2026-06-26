@@ -10,7 +10,7 @@ from pathlib import Path
 import httpx
 
 LOCAL_BASE_URL = "http://localhost:8000/v1"
-VISION_MODEL = "Qwen/Qwen2.5-VL-32B-Instruct"
+VISION_MODEL = "/data/models/Qwen3-VL-32B-Instruct"
 
 DETECTION_PROMPT = """You are an expert forensic image analyst specializing in detecting AI-generated images.
 

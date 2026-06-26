@@ -119,16 +119,21 @@ async def process_folder(input_folder: Path, output_folder: Path):
 
     async with httpx.AsyncClient(timeout=120.0) as client:
         for image_path in images:
+            out_file = output_folder / (image_path.stem + ".json")
+            if out_file.exists():
+                cached = json.loads(out_file.read_text(encoding="utf-8"))
+                if "error" not in cached:
+                    summary.append(cached)
+                    print(f"跳过: {image_path.name} (已有结果)")
+                    continue
             print(f"处理: {image_path.name} ...", end=" ", flush=True)
             try:
                 result = await detect_image(client, image_path)
-                out_file = output_folder / (image_path.stem + ".json")
                 out_file.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
                 summary.append(result)
                 print(f"AI概率: {result['probability']} | 判断: {'AI生成' if result['is_ai_generated'] else '真实照片'} [{result['confidence']}]")
             except Exception as e:
                 error_result = {"filename": image_path.name, "error": str(e)}
-                out_file = output_folder / (image_path.stem + ".json")
                 out_file.write_text(json.dumps(error_result, ensure_ascii=False, indent=2), encoding="utf-8")
                 summary.append(error_result)
                 print(f"失败: {e}")

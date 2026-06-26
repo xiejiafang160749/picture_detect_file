@@ -135,8 +135,20 @@ async def process_folder(input_folder: Path, output_folder: Path):
 
     summary_file = output_folder / "summary.json"
     summary_file.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # 生成提交格式 JSONL：image_name + is_generated ("1"=AI生成, "0"=真实)
+    jsonl_file = output_folder / "result.jsonl"
+    with jsonl_file.open("w", encoding="utf-8") as f:
+        for r in summary:
+            if "error" not in r:
+                f.write(json.dumps({
+                    "image_name": r["filename"],
+                    "is_generated": "1" if r["is_ai_generated"] else "0"
+                }, ensure_ascii=False) + "\n")
+
     print(f"\n完成！结果已保存到: {output_folder}")
     print(f"汇总文件: {summary_file}")
+    print(f"提交文件: {jsonl_file}")
 
 
 def main():
